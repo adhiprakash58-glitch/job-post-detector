@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireShield 360</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+  <main class="container">
+    <h1>HireShield 360</h1>
+    <p class="subtitle">AI-powered fraud detection for job and internship postings.</p>
+
+    <form method="POST" enctype="multipart/form-data" class="card">
+      <label for="job_text">Paste job description/post text</label>
+      <textarea id="job_text" name="job_text" rows="8" placeholder="Paste LinkedIn post, Instagram caption, or email text..."></textarea>
+
+      <label for="job_image">Or upload screenshot (PNG/JPG)</label>
+      <input type="file" id="job_image" name="job_image" accept="image/*" />
+
+      <button type="submit">Analyze Post</button>
+    </form>
+
+    {% if result %}
+      <section class="card result">
+        {% if result.error %}
+          <p class="error">{{ result.error }}</p>
+        {% else %}
+          <h2>Prediction Result</h2>
+          <p><strong>Classification:</strong> {{ result.classification }}</p>
+          <p><strong>Confidence:</strong> {{ result.confidence }}</p>
+          <p><strong>Domain Verification:</strong> {{ result.domain_status }}</p>
+          <p><strong>Domain Details:</strong> {{ result.domain_details }}</p>
+          {% if result.ocr_message %}
+            <p><strong>OCR:</strong> {{ result.ocr_message }}</p>
+          {% endif %}
+          {% if result.extracted_text %}
+            <details>
+              <summary>Extracted Text from Image</summary>
+              <pre>{{ result.extracted_text }}</pre>
+            </details>
+          {% endif %}
+        {% endif %}
+      </section>
+    {% endif %}
+  </main>
+</body>
+</html>
